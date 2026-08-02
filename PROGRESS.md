@@ -75,13 +75,24 @@ Remaining / next:
 
 ## Phase 3 — Playground + Monaco + Sandpack
 
-Status: ⬜ Not started
+Status: ✅ Done — 2026-08-02
 
-Planned:
+Implemented:
 
-- Lazy-loaded Monaco editor shell (`components/feature/playground/`) wired to settings (font size, theme).
-- Playground layout with tabs/split; Sandpack live previews for CSS/HTML/React; console for JS; Express mock API panel.
-- Per-technology playground routes.
+- Deps: `@monaco-editor/react` + `monaco-editor` (self-hosted via `scripts/setup-monaco.mjs` → `public/vs`, git/prettier/eslint ignored), `@codesandbox/sandpack-react` v2.19.x (React 19 peer deps OK).
+- `config/playgrounds.ts`: typed `PlaygroundPreset` registry (files, template, mainFile, layout) for `css`, `tailwind`, `javascript`, `typescript`, `react`, `next`, `node`, `express`; single source of truth, all registered techs covered.
+- `types/playground.ts`: `PlaygroundMode` (sandpack | express-mock), `SandpackTemplateName`, `MonacoLanguage`, `PlaygroundFile`, `PlaygroundPreset`.
+- Components (`components/feature/playground/`): settings-aware self-hosted `MonacoEditor`; `SandpackWorkspace` (provider + toolbar Run/Reset, file tabs with `updateFile`, Preview/Console/Output panes); `ExpressMockPanel` (editor + method/path/body request panel, response history, parsed-route list click-to-fill); `Playground` orchestrator via `next/dynamic` (ssr:false).
+- Express mock: `features/playground/express-mock.ts` — pure parser (no eval), routes/params/statuses/bodies incl. chained `res.status(201).json({...})`, `jsLiteralToJson` (true/false/null literals, unquoted/single-quoted keys, trailing commas); unresolved identifiers → `null`.
+- Route: `app/technologies/[slug]/playground/page.tsx` wired to presets, SSG preserved (build shows `/technologies/css|javascript/playground`).
+- Tests: `features/playground/express-mock.test.ts` (7 tests), `config/playgrounds.test.ts` (2 tests) — 26/26 total.
+- pnpm 11: `postinstall` invokes `node` directly; `pnpm-workspace.yaml` `allowBuilds` (es5-ext) required over package.json `pnpm.onlyBuiltDependencies`.
+
+Verification: `pnpm lint` ✅ · `pnpm typecheck` ✅ · `pnpm test` (26/26) ✅ · `pnpm build` (28 static routes incl. playground) ✅
+
+Remaining / next:
+
+- Phase 4 (Validation engine) — ChallengeRunner, validator registry, sandboxed iframe harness.
 
 ---
 

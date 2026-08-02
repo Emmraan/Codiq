@@ -117,3 +117,17 @@ This file logs significant architecture decisions. New ADRs are appended; supers
 **Alternatives considered:** Installing `estree-walker` as a direct dependency with an explicit `require` condition (fragile, patches the dependency tree); pinning tsx (same resolver problem); `node --experimental-strip-types` (not stable in the pinned Node range at time of writing).
 
 **Reversal cost:** Low.
+
+## ADR-010: Static Express mock — parser, no eval
+
+**Status:** Accepted
+
+**Context:** The Express playground needs an HTTP-like simulation (routes, params, statuses, JSON bodies) running entirely in the browser on the main thread. Evaluating learner code with `eval`/`new Function` is unsafe and would need a sandbox harness far heavier than the feature warrants (ADR-002 reserved for real validation).
+
+**Decision:** `features/playground/express-mock.ts` is a pure, deterministic parser. It regex-scans `app.<verb>(path, handler)` with balanced-parenthesis walking, extracts `res.status(N)` and chained send bodies (`res.status(201).json({...})`, `res.json(...)`, `res.send(...)`, `res.jsonp(...)`), and converts inline object/array literals to JSON via `jsLiteralToJson` (unquoted/single-quoted keys, trailing commas, `true`/`false`/`null`). Unresolvable expressions (identifiers, method calls, functions) map to `null`. `matchRequest` performs path-parameter and method matching. No code is ever executed.
+
+**Consequences:** + Safe on the main thread, zero dependencies, unit-testable. + Static route list and click-to-fill UI come free. − Real Express semantics (middleware, regex routes, callbacks) are not simulated; the mock is educational, not faithful. − Parser is regex-based, so exotic handler syntax may be missed.
+
+**Alternatives considered:** Main-thread `eval` (unsafe); bundling a real Node Express in the browser (not viable on static hosts); a dedicated sandboxed iframe per request (heavier than needed; ADR-002 harness remains for Phase 4 challenges).
+
+**Reversal cost:** Low.

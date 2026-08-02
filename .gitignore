@@ -23,6 +23,9 @@
 # generated content pipeline output (regenerated on build via `pnpm content:build`)
 /lib/generated/
 
+# self-hosted Monaco editor assets (copied from node_modules via `pnpm setup:monaco`)
+/public/vs/
+
 # misc
 .DS_Store
 *.pem

@@ -7,5 +7,6 @@ playwright-report
 test-results
 next-env.d.ts
 lib/generated
+public/vs
 .pnpm-store
 CHANGELOG.md
