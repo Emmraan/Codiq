@@ -1,0 +1,96 @@
+---
+title: Type, class & ID selectors
+slug: type-class-id-selectors
+order: 1
+difficulty: beginner
+readingTime: 8
+xp: 40
+tags: [selectors, basics]
+prerequisites: []
+description: Learn how to target elements with type, class and ID selectors.
+status: published
+---
+
+Selectors decide *which* elements a rule applies to. Master them and you control every pixel on the page.
+
+## Why selectors matter
+
+Every CSS rule has two parts:
+
+```css
+selector {
+  property: value;
+}
+```
+
+The selector picks the elements; the declaration block styles them.
+
+<Diagram title="How a rule resolves">
+Your HTML provides the elements. Your selectors match them. Your declarations style what matched.
+</Diagram>
+
+## Type selectors
+
+A type selector matches every element with that tag name:
+
+```css
+p {
+  color: #1e293b;
+}
+```
+
+This colors **all** paragraphs. Simple, but blunt — it applies everywhere.
+
+## Class selectors
+
+Classes are reusable. Give several elements the same class and style them once:
+
+```css
+.card {
+  border: 1px solid var(--border);
+  padding: 1rem;
+}
+```
+
+## ID selectors
+
+IDs identify a single element. Prefer them for page-level hooks only:
+
+```css
+#site-header {
+  position: sticky;
+  top: 0;
+}
+```
+
+<Note variant="warning" title="IDs are unique">
+An ID must appear on exactly one element per page. Reuse a class when you need the same style in several places.
+</Note>
+
+## Specificity at a glance
+
+| Selector          | Specificity |
+| ----------------- | ----------- |
+| `*`               | 0-0-0       |
+| `p`               | 0-0-1       |
+| `.card`           | 0-1-0       |
+| `#site-header`    | 1-0-0       |
+
+Higher specificity wins when rules conflict.
+
+<CommonMistakes>
+
+- Styling `#id` selectors everywhere, then fighting to override them later
+- Assuming the last rule in the file always wins — the cascade considers specificity first
+
+</CommonMistakes>
+
+<InterviewQuestion level="common">
+
+What is specificity, and how does it interact with the cascade?
+
+</InterviewQuestion>
+
+## Practice
+
+Open the example and try changing the selector for the highlighted paragraph. Then take the challenge to earn XP.

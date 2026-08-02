@@ -42,6 +42,13 @@ export interface ModuleMeta {
   technologySlug: string;
 }
 
+/**
+ * Names of the optional guide documents that live at the technology root
+ * (`content/<slug>/<name>.mdx`).
+ */
+export type TechnologyDocName =
+  "intro" | "installation" | "structure" | "best-practices" | "summary";
+
 export interface LessonMetadata {
   title: string;
   slug: string;
@@ -80,11 +87,21 @@ export interface ChallengeMetadata {
   validator: ValidatorConfig;
   /** Soft time cap in minutes before the challenge is considered slow. */
   timeLimit?: number;
+  /** Relative path of the esbuild-bundled validator bundle (set by the pipeline). */
+  validatorPath?: string;
 }
 
 /** A technology as it appears in the generated registry (metadata + counts). */
 export interface RegisteredTechnology extends TechnologyMeta {
   moduleCount: number;
+  lessonCount: number;
+  /** Compiled guide docs (`lib/generated/mdx/<slug>/<name>.js`), when authored. */
+  docs: Partial<Record<TechnologyDocName, string>>;
+}
+
+/** A module as it appears in the generated registry (metadata + lessons). */
+export interface RegisteredModule extends ModuleMeta {
+  lessonSlugs: string[];
   lessonCount: number;
 }
 

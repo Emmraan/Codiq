@@ -1,0 +1,17 @@
+{
+  "title": "Target the intro",
+  "description": "Style the first paragraph using a descendant selector.",
+  "difficulty": "beginner",
+  "xp": 50,
+  "objectives": ["Use a descendant selector", "Change the text color"],
+  "requirements": [
+    { "id": "sel-descendant", "label": "A descendant selector exists" },
+    { "id": "color-applied", "label": "The paragraph is colored" }
+  ],
+  "hints": ["Remember: `ancestor descendant { }`", "Try `p` with a class"],
+  "seed": { "styles.css": "/* your code */" },
+  "validator": {
+    "type": "css",
+    "checks": ["selector-presence", "computed-style"]
+  }
+}

@@ -52,15 +52,24 @@ Verification: `pnpm lint` ✅ · `pnpm typecheck` ✅ · `pnpm test` (8/8) ✅ �
 
 ## Phase 2 — Content engine + MDX loader
 
-Status: ⬜ Not started
+Status: ✅ Done — 2026-08-02
 
-Planned:
+Implemented:
 
-- Zod-validated content schema; `scripts/build-content.ts` pipeline (discovery, frontmatter, MDX compile, validator bundling, search extraction).
-- `lib/generated/content-registry.ts` output + `generateStaticParams` for lesson routes.
-- MDX renderer with custom components (notes, diagrams, common mistakes, interview questions, embedded playground).
-- Technology / module / lesson pages wired to the registry; auto navigation + sitemap + search index.
-- `docs/CONTENT_SCHEMA.md` + first ADRs.
+- Zod-validated content schema (`lib/content/schema.ts`): technology, module, lesson frontmatter, challenge, validator config; category/difficulty/hex-color enums.
+- `scripts/build-content.mts` pipeline + `scripts/content-build.mjs` esbuild-CJS launcher (tsx can't run `@mdx-js/mdx`'s ESM-only transitive dep `estree-walker` — see ADR-009): discover → validate → compile MDX (`remark-gfm`, `rehype-slug`, heading/text extraction) → bundle validators → emit `lib/generated/` (registry, search index, mdx modules, validator bundles, examples, cache).
+- MDX renderer: `lib/mdx-components.tsx` (styled primitives + `Note`, `Diagram`, `CommonMistakes`, `InterviewQuestion`, `Playground`; `MDXComponents` type defined locally) and `components/composite/mdx-content.tsx` dynamic renderer.
+- Validator contract `validators/types.ts` + sample CSS validator bundled into `lib/generated/validators/`.
+- Routes wired to the registry: technology pages (+ docs sections, module cards), module index pages (NEW), lesson pages (breadcrumb, badges, course sidebar, challenge card, global prev/next, `dynamicParams=false`, generateStaticParams/generateMetadata), playground, paths detail, home, sitemap. All 28 routes statically generated.
+- `config/technologies.ts` deleted (replaced by registry); CI reordered lint → content:build → typecheck → test → build; `prebuild` hook regenerates content before `next build`.
+- Sample content: `content/css/` (tech.json + 5 guide docs; modules `css-selectors`, `css-box-model`) and `content/javascript/` (tech.json + docs; module `js-functions`).
+- Tests: `lib/content/mdx.test.ts` (4 tests: normalizeText, compiled output shape, heading ids incl. re-slugging, frontmatter excluded). Docs updated (CONTENT_SCHEMA, ADR-001, ADR-009).
+
+Verification: `pnpm content:build` ✅ · `pnpm lint` ✅ · `pnpm typecheck` ✅ · `pnpm test` (12/12) ✅ · `pnpm build` (28 static routes) ✅
+
+Remaining / next:
+
+- Phase 3 (Playground + Monaco + Sandpack) — Monaco editor shell, Sandpack previews, per-technology playground routes.
 
 ---
 

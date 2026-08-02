@@ -1,10 +1,10 @@
 import Link from "next/link";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, BookOpen } from "lucide-react";
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { PageHeader } from "@/components/composite/page-header";
 import { TechIcon } from "@/components/composite/tech-icon";
-import { technologySeeds } from "@/config/technologies";
+import { technologies } from "@/lib/generated/content-registry";
 
 export const metadata = {
   title: "Technologies",
@@ -21,7 +21,7 @@ export default function TechnologiesPage() {
       />
 
       <div className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {technologySeeds.map((tech) => {
+        {technologies.map((tech) => {
           return (
             <Link key={tech.slug} href={`/technologies/${tech.slug}`} className="group">
               <Card className="hover:border-primary/50 h-full transition-colors">
@@ -38,6 +38,10 @@ export default function TechnologiesPage() {
                   <CardDescription>{tech.description}</CardDescription>
                 </CardHeader>
                 <CardContent className="flex items-center justify-between text-sm">
+                  <span className="text-muted-foreground flex items-center gap-1.5">
+                    <BookOpen className="size-3.5" />
+                    {tech.lessonCount} lesson{tech.lessonCount === 1 ? "" : "s"}
+                  </span>
                   <span className="text-muted-foreground capitalize">{tech.category}</span>
                   <ArrowRight className="text-muted-foreground group-hover:text-primary size-4 transition-colors" />
                 </CardContent>

@@ -1,0 +1,63 @@
+---
+title: Padding, border & margin
+slug: padding-border-margin
+order: 1
+difficulty: beginner
+readingTime: 6
+xp: 30
+tags: [box-model, spacing]
+prerequisites: [type-class-id-selectors]
+description: Understand the four rings that wrap every element.
+status: published
+---
+
+Every element is a box. Know its anatomy and spacing stops being guesswork.
+
+## The four rings
+
+| Layer    | What it does                        |
+| -------- | ----------------------------------- |
+| content  | The actual text or media            |
+| padding  | Space between content and border    |
+| border   | The visible edge                    |
+| margin   | Space outside the border            |
+
+<Diagram title="Box anatomy">
+content → padding → border → margin, outward from the element
+</Diagram>
+
+## Shorthand ordering
+
+```css
+.box {
+  padding: 8px 12px 8px 12px; /* top right bottom left */
+}
+```
+
+Use two values for vertical/horizontal: `padding: 8px 12px;`.
+
+<Note variant="info" title="Margin collapses">
+Adjacent vertical margins combine into one. Use padding inside a container when you need guaranteed space.
+</Note>
+
+## `box-sizing`
+
+By default `width` excludes padding and border. Switch to the saner model globally:
+
+```css
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+```
+
+<InterviewQuestion level="intermediate">
+
+Why is `box-sizing: border-box` considered a best practice in modern CSS?
+
+</InterviewQuestion>
+
+## Next up
+
+Move on to the next lesson to keep the momentum, then try the challenge.

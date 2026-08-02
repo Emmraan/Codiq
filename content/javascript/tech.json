@@ -1,0 +1,15 @@
+{
+  "slug": "javascript",
+  "name": "JavaScript",
+  "description": "The language of the web — values, functions, scope, async.",
+  "color": "#eab308",
+  "category": "frontend",
+  "difficulty": "beginner",
+  "order": 3,
+  "tags": ["language", "web", "runtime"],
+  "pathIds": ["frontend-developer", "backend-developer", "fullstack-developer"],
+  "icon": "braces",
+  "featured": false,
+  "prerequisites": [],
+  "estimatedHours": 20
+}

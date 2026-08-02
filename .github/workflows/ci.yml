@@ -33,14 +33,14 @@ jobs:
       - name: Lint
         run: pnpm lint
 
+      - name: Build content registry
+        run: pnpm content:build
+
       - name: Typecheck
         run: pnpm typecheck
 
       - name: Unit & integration tests
         run: pnpm test
-
-      - name: Build content registry
-        run: pnpm content:build
 
       - name: Production build
         run: pnpm build

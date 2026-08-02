@@ -15,7 +15,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { EmptyState } from "@/components/composite/empty-state";
 import { TechIcon } from "@/components/composite/tech-icon";
 import { learningPaths } from "@/config/learning-paths";
-import { technologySeeds } from "@/config/technologies";
+import { technologies } from "@/lib/generated/content-registry";
 
 const philosophySteps = [
   "Read",
@@ -169,7 +169,7 @@ export default function HomePage() {
             </Button>
           </div>
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            {technologySeeds.slice(0, 8).map((tech) => {
+            {technologies.map((tech) => {
               return (
                 <Link key={tech.slug} href={`/technologies/${tech.slug}`} className="group">
                   <Card className="hover:border-primary/50 h-full transition-colors">
@@ -185,6 +185,9 @@ export default function HomePage() {
                       </CardTitle>
                       <CardDescription>{tech.description}</CardDescription>
                     </CardHeader>
+                    <CardContent className="text-muted-foreground text-sm">
+                      {tech.lessonCount} lessons
+                    </CardContent>
                   </Card>
                 </Link>
               );

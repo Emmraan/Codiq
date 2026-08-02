@@ -1,0 +1,15 @@
+{
+  "slug": "css",
+  "name": "CSS",
+  "description": "Layout, specificity, flexbox, grid and the modern box model.",
+  "color": "#06b6d4",
+  "category": "frontend",
+  "difficulty": "beginner",
+  "order": 1,
+  "tags": ["styling", "layout", "frontend"],
+  "pathIds": ["frontend-developer", "fullstack-developer"],
+  "icon": "palette",
+  "featured": true,
+  "prerequisites": [],
+  "estimatedHours": 12
+}

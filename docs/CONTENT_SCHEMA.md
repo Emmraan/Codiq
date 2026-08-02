@@ -2,7 +2,7 @@
 
 ## 1. The content model
 
-Everything under `content/` is data. The build pipeline (`scripts/build-content.ts`) discovers it, validates it with Zod, compiles it, and emits a typed registry consumed by the app. **Adding content never requires editing UI code.**
+Everything under `content/` is data. The build pipeline (`scripts/build-content.mts`, executed through the `scripts/content-build.mjs` launcher) discovers it, validates it with Zod, compiles it, and emits a typed registry consumed by the app. **Adding content never requires editing UI code.**
 
 ```
 content/
@@ -58,7 +58,7 @@ status: published # draft | published
 ---
 ```
 
-The MDX body supports the standard markdown + MDX syntax plus CODIQ components: notes, diagrams, common-mistakes, interview-questions, and embedded playgrounds (mapping defined in `lib/mdx-components.tsx`, Phase 2).
+The MDX body supports the standard markdown + MDX syntax plus CODIQ components: notes, diagrams, common-mistakes, interview-questions, and embedded playgrounds (mapping defined in `lib/mdx-components.tsx`).
 
 ## 4. `challenge.json`
 
@@ -100,9 +100,11 @@ export const validator: Validator = {
 
 1. **Discover** — glob `content/**/tech.json` → technologies; `content/**/modules/**/lesson.mdx` → lessons.
 2. **Validate** — Zod schemas reject malformed metadata early with helpful errors.
-3. **Compile** — MDX bodies compiled to renderable form; validator.ts bundled via esbuild.
+3. **Compile** — MDX bodies compiled to renderable modules; validator.ts bundled via esbuild.
 4. **Extract** — headings and plain text captured for navigation + search index.
-5. **Emit** — `lib/generated/content-registry.ts` + `search-index.json`.
+5. **Emit** — `lib/generated/content-registry.ts` + `search-index.json`, plus `lib/generated/mdx/**` (compiled lesson/docs modules + examples), `lib/generated/validators/**` (validator bundles), and a `.cache/` with parsed frontmatter.
+
+**Why a launcher?** tsx cannot run `@mdx-js/mdx` here because its transitive dependency `estree-walker@3.0.3` is ESM-only (no `require` export) → `ERR_PACKAGE_PATH_NOT_EXPORTED`. `scripts/content-build.mjs` therefore bundles the pipeline with esbuild to CJS (aliasing `@/` to the repo root) and requires the bundle. See ADR-009.
 
 Run `pnpm content:build` (wired into `next build` as well). The registry drives `generateStaticParams`, navigation, sitemap, and search.
 

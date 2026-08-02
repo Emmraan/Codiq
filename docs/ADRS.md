@@ -8,7 +8,7 @@ This file logs significant architecture decisions. New ADRs are appended; supers
 
 **Context:** The app must be fully content-driven — adding a lesson or technology must not require editing UI code. Runtime file access isn't possible on static hosts, and dynamic globbing is fragile.
 
-**Decision:** `scripts/build-content.ts` scans `content/`, validates with Zod, compiles MDX, bundles validators (esbuild), extracts search data, and emits `lib/generated/content-registry.ts` + `search-index.json`. `generateStaticParams` consumes the registry. MDX is compiled with `@mdx-js/mdx` and rendered with `@mdx-js/react` (React 19 compatible).
+**Decision:** `scripts/build-content.mts` (run via the `scripts/content-build.mjs` launcher, see ADR-009) scans `content/`, validates with Zod, compiles MDX, bundles validators (esbuild), extracts search data, and emits `lib/generated/content-registry.ts` + `search-index.json` plus compiled MDX modules, validator bundles, and example sources. `generateStaticParams` consumes the registry. MDX is compiled with `@mdx-js/mdx` and rendered with `@mdx-js/react` (React 19 compatible).
 
 **Consequences:** + Adding content = dropping files + rebuild. + Works on any static host. + Full type safety. − Requires a build step for content changes. − Registry must be regenerated in CI.
 
@@ -101,5 +101,19 @@ This file logs significant architecture decisions. New ADRs are appended; supers
 **Decision:** Reserve `features/ai/` and `lib/ai/` with a provider-agnostic `AIService` interface (`complete`, `hint`, `review`, `explainMistake`) and a no-op implementation. AI keys remain server-side only. Content carries machine-readable metadata for context injection. See [AI_ROADMAP.md](AI_ROADMAP.md).
 
 **Consequences:** + No refactor when AI lands. − Interface may need tuning once a real provider is chosen.
+
+**Reversal cost:** Low.
+
+## ADR-009: esbuild-CJS launcher for the content pipeline
+
+**Status:** Accepted
+
+**Context:** The Phase 2 content pipeline imports `@mdx-js/mdx`, whose transitive dependency `estree-walker@3.0.3` is ESM-only — its `exports` map provides no `require` condition, and pnpm does not hoist it to a path a CJS resolver can reach. Running the pipeline with `tsx` (which resolves bare ESM-only packages through the CJS resolver) throws `ERR_PACKAGE_PATH_NOT_EXPORTED`.
+
+**Decision:** Author the pipeline as `scripts/build-content.mts` and execute it via `scripts/content-build.mjs`, which bundles the pipeline to a single CJS file with esbuild (platform: node, aliasing `@/` to the repo root, esbuild itself external) and runs it through `createRequire`. `CODIQ_ROOT` overrides the working directory for tests/CI.
+
+**Consequences:** + Runs on any Node ≥ 18 without a tsx dependency. + Bundle step also validates the emit surface. − Pipeline cannot use top-level await; main is invoked explicitly. − An extra build hop between content and registry.
+
+**Alternatives considered:** Installing `estree-walker` as a direct dependency with an explicit `require` condition (fragile, patches the dependency tree); pinning tsx (same resolver problem); `node --experimental-strip-types` (not stable in the pinned Node range at time of writing).
 
 **Reversal cost:** Low.

@@ -8,11 +8,17 @@ import { Card, CardHeader, CardTitle } from "@/components/ui/card";
 import { EmptyState } from "@/components/composite/empty-state";
 import { TechIcon } from "@/components/composite/tech-icon";
 import { learningPaths } from "@/config/learning-paths";
-import { technologySeeds } from "@/config/technologies";
+import { getModulesByTechnology, getTechnology, lessons } from "@/lib/generated/content-registry";
 
 export const metadata = {
   title: "Learning Path",
 };
+
+export const dynamicParams = false;
+
+export function generateStaticParams() {
+  return learningPaths.map((path) => ({ slug: path.slug }));
+}
 
 export default async function PathDetailPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
@@ -21,8 +27,16 @@ export default async function PathDetailPage({ params }: { params: Promise<{ slu
   if (!path) notFound();
 
   const technologies = path.technologies
-    .map((techSlug) => technologySeeds.find((t) => t.slug === techSlug))
-    .filter((t) => t !== undefined);
+    .map((techSlug) => getTechnology(techSlug))
+    .filter((tech) => tech !== undefined);
+
+  const publishedLessons = lessons.filter((lesson) => lesson.status !== "draft");
+  const pathLessonCount = publishedLessons.filter((lesson) =>
+    path.technologies.includes(lesson.technologySlug),
+  ).length;
+
+  const firstTechnology = technologies[0];
+  const firstModule = firstTechnology ? getModulesByTechnology(firstTechnology.slug)[0] : undefined;
 
   return (
     <div className="container-site py-16">
@@ -73,14 +87,16 @@ export default async function PathDetailPage({ params }: { params: Promise<{ slu
       <div className="mt-12">
         <EmptyState
           icon={BookOpen}
-          title="Modules are on the way"
-          description={`The content pipeline lands in Phase 2. Once live, this path will track your completion automatically and show a live progress ring.`}
+          title="Path progress arrives next"
+          description={`${pathLessonCount} lessons across ${technologies.length} technologies are live on this path. Automatic progress tracking, XP and completion rings land in a later phase.`}
           action={
-            <Button asChild>
-              <Link href="/technologies">
-                Browse technologies <ArrowRight />
-              </Link>
-            </Button>
+            firstModule && firstTechnology ? (
+              <Button asChild>
+                <Link href={`/learn/${firstTechnology.slug}/${firstModule.slug}`}>
+                  Start the path <ArrowRight />
+                </Link>
+              </Button>
+            ) : undefined
           }
         />
       </div>

@@ -1,0 +1,78 @@
+---
+title: Functions and closures
+slug: functions-closures
+order: 1
+difficulty: beginner
+readingTime: 10
+xp: 50
+tags: [functions, scope]
+prerequisites: []
+description: Write functions that read clearly and close over their environment.
+status: published
+---
+
+Functions are values. That single idea unlocks callbacks, closures and the entire functional style.
+
+## Function declarations vs arrows
+
+```js
+function greet(name) {
+  return `Hello, ${name}`;
+}
+
+const greetArrow = (name) => `Hello, ${name}`;
+```
+
+Both are functions. Arrows differ in one big way: they inherit `this` from the surrounding scope.
+
+<Note variant="info" title="Prefer arrows for callbacks">
+`setTimeout(() => this.save(), 1000)` keeps the enclosing `this`. A `function` keyword would rebind it.
+</Note>
+
+## Closures
+
+A function remembers the variables that were in scope where it was created:
+
+```js
+function makeCounter() {
+  let count = 0;
+  return () => ++count;
+}
+
+const counter = makeCounter();
+counter(); // 1
+counter(); // 2
+```
+
+## Parameters
+
+Give parameters defaults instead of guarding manually:
+
+```js
+function formatCurrency(amount, currency = "USD") {
+  return `${currency} ${amount.toFixed(2)}`;
+}
+```
+
+| Feature          | Example                            |
+| ---------------- | ---------------------------------- |
+| Defaults         | `function f(a = 1)`                |
+| Rest             | `function f(...rest)`              |
+| Destructuring    | `function f({ name, age } = {})`   |
+
+<CommonMistakes>
+
+- Returning early from inside a `.map()` callback instead of mapping a value
+- Creating functions inside renders that break memoization — a React-specific pitfall to meet later
+
+</CommonMistakes>
+
+<InterviewQuestion level="common">
+
+Explain what a closure is and give one real-world use.
+
+</InterviewQuestion>
+
+## Practice
+
+Rewrite the counter example as a function that takes a starting value. Then move on to the next lesson.

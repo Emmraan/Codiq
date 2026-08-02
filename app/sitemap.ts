@@ -2,11 +2,11 @@ import type { MetadataRoute } from "next";
 
 import { siteConfig } from "@/config/site";
 import { learningPaths } from "@/config/learning-paths";
-import { technologySeeds } from "@/config/technologies";
+import { lessons, modules, technologies } from "@/lib/generated/content-registry";
 
 /**
- * Sitemap generated from config seeds in Phase 1. In Phase 2 this is driven by
- * the content registry so every lesson/module is discovered automatically.
+ * Sitemap driven by the build-time content registry, so every technology,
+ * module and published lesson is discovered automatically.
  */
 export default function sitemap(): MetadataRoute.Sitemap {
   const base = siteConfig.url;
@@ -36,7 +36,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "weekly" as const,
       priority: 0.7,
     })),
-    ...technologySeeds.flatMap((tech) => [
+    ...technologies.flatMap((tech) => [
       {
         url: `${base}/technologies/${tech.slug}`,
         lastModified: now,
@@ -50,6 +50,20 @@ export default function sitemap(): MetadataRoute.Sitemap {
         priority: 0.6,
       },
     ]),
+    ...modules.map((mod) => ({
+      url: `${base}/learn/${mod.technologySlug}/${mod.slug}`,
+      lastModified: now,
+      changeFrequency: "weekly" as const,
+      priority: 0.6,
+    })),
+    ...lessons
+      .filter((lesson) => lesson.status !== "draft")
+      .map((lesson) => ({
+        url: `${base}/learn/${lesson.technologySlug}/${lesson.moduleSlug}/${lesson.slug}`,
+        lastModified: now,
+        changeFrequency: "weekly" as const,
+        priority: 0.6,
+      })),
   ];
 
   return routes;

@@ -2,7 +2,13 @@ import { notFound } from "next/navigation";
 import { FlaskConical } from "lucide-react";
 
 import { EmptyState } from "@/components/composite/empty-state";
-import { technologySeeds } from "@/config/technologies";
+import { getTechnology, technologies } from "@/lib/generated/content-registry";
+
+export const dynamicParams = false;
+
+export function generateStaticParams() {
+  return technologies.map((tech) => ({ slug: tech.slug }));
+}
 
 export const metadata = {
   title: "Playground",
@@ -11,7 +17,7 @@ export const metadata = {
 
 export default async function PlaygroundPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
-  const tech = technologySeeds.find((t) => t.slug === slug);
+  const tech = getTechnology(slug);
 
   if (!tech) notFound();
 
