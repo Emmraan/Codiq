@@ -5,8 +5,8 @@ import { ChevronLeft, ChevronRight, Clock, Star, Target } from "lucide-react";
 
 import { MdxContent } from "@/components/composite/mdx-content";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { ChallengeRunner } from "@/components/feature/challenge/challenge-runner";
 import {
   getLessonBySlug,
   getLessonsByModule,
@@ -168,15 +168,7 @@ export default async function LessonPage({ params }: { params: LessonPageParams 
                 <CardDescription>{challenge.description}</CardDescription>
               </CardHeader>
               <CardContent>
-                <div className="flex flex-wrap items-center gap-2">
-                  <Badge variant="secondary" className="capitalize">
-                    {challenge.difficulty}
-                  </Badge>
-                  <Badge variant="warning">
-                    <Star /> {challenge.xp} XP
-                  </Badge>
-                </div>
-                <ul className="mt-4 space-y-1.5">
+                <ul className="space-y-1.5">
                   {challenge.objectives.map((objective) => (
                     <li key={objective} className="text-muted-foreground flex gap-2 text-sm">
                       <span className="text-primary">•</span>
@@ -184,9 +176,9 @@ export default async function LessonPage({ params }: { params: LessonPageParams 
                     </li>
                   ))}
                 </ul>
-                <Button className="mt-6" disabled>
-                  Interactive lab arrives in Phase 3
-                </Button>
+                <div className="mt-6">
+                  <ChallengeRunner challenge={challenge} labId={lesson.slug} />
+                </div>
               </CardContent>
             </Card>
           )}

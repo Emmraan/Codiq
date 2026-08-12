@@ -100,14 +100,24 @@ Remaining / next:
 
 ## Phase 4 — Validation engine
 
-Status: ⬜ Not started
+Status: ✅ Done — 2026-08-12
 
-Planned:
+Implemented:
 
-- `validators/` framework: Validator interface, registry, sandboxed iframe harness (postMessage protocol, CSP sandbox, timeouts).
-- Built-in validators: html, css, js, ts, react, express-mock.
-- ChallengeRunner UI: requirements checklist, hints, run/reset, granular results, SuccessDialog + XP award.
-- `docs/VALIDATION_ENGINE.md` finalized with protocol spec.
+- `validators/` framework: typed contracts (`types.ts`: `Validator`, `ValidatorInput`, `ValidationResult` with granular `CheckResult[]` + `ConsoleLine[]`, `RunRequest`/`SandboxMessage` protocol, `RuntimeLibrary`, `BundledValidator`) and an authoring registry (`index.ts` mapping `ValidatorType → factory`).
+- Sandboxed iframe harness (`harness.ts` + `harness.test.ts`): opaque sandbox (`sandbox="allow-scripts"`, no `allow-same-origin`), `srcdoc` injection of the validator IIFE (`window.__codiqValidator`) + runtime libs, live console streaming, postMessage protocol with source/origin/id validation, 8s timeout, dispose handling. Unit-tested (protocol, forged/stale messages, timeouts, error paths).
+- Built-in validators + tests (`validators/builtin/*.ts`): `html` (detached-DOM structure/attribute/text), `css` (rule/property + `getComputedStyle` fixture checks), `js` (indirect-eval + console capture + global probes), `ts` (sandbox `window.ts` or injected esbuild transpile), `react` (TSX→CJS module eval + real render + DOM assertions), `express` (pure in-memory route matching, no eval).
+- Build pipeline: `scripts/build-content.mts` now bundles each module `validator.ts` via esbuild IIFE (`globalName: "__codiqValidator"`) into `lib/generated/validators/` and emits the raw-source map `lib/generated/validator-sources.ts` (keyed by `validatorKey`); `ChallengeMetadata.validatorKey` added.
+- ChallengeRunner UI (`components/feature/challenge/`): Monaco editor + Run/Reset toolbar, live requirements checklist (pending/running/pass/fail), progressive hints, console panel, results banner + progress bar, `SuccessDialog` (XP award + completion recorded in the progress store) — wired into every lesson with a challenge.
+- `app/labs/page.tsx` now lists all published lessons with challenges (type badge, XP, links).
+- `docs/VALIDATION_ENGINE.md` finalized: execution model, sandbox layout, runtime-lib table, full postMessage protocol spec, build pipeline, ChallengeRunner, security, testing.
+- Fixed Phase 4 type/lint issues: `evaluateModule` exposes `module` to esbuild CJS output, harness option defaults satisfy `Required<…>`, `build-content.mts` keyed map set, `vitest.setup.ts` restores Node `TextEncoder`/`Uint8Array` realms for esbuild under jsdom.
+
+Verification: `pnpm lint` ✅ · `pnpm typecheck` ✅ · `pnpm test` (61/61) ✅ · `pnpm content:build` ✅ · `pnpm build` (28 static routes incl. lesson labs) ✅
+
+Remaining / next:
+
+- Phase 5 (Progress system, IndexedDB) — full gamification on top of the Phase 1 store + Phase 4 completion hooks.
 
 ---
 

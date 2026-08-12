@@ -89,6 +89,8 @@ export interface ChallengeMetadata {
   timeLimit?: number;
   /** Relative path of the esbuild-bundled validator bundle (set by the pipeline). */
   validatorPath?: string;
+  /** `${techSlug}/${moduleSlug}` key into the generated validator-sources map. */
+  validatorKey?: string;
 }
 
 /** A technology as it appears in the generated registry (metadata + counts). */
