@@ -4,6 +4,8 @@ Live implementation tracker for CODIQ. One entry per phase: status, date, what w
 
 Legend: ⬜ Not started · 🔄 In progress · ✅ Done
 
+**Branch policy (from Phase 4 onward):** every remaining phase must be developed on a dedicated feature branch (e.g. `phase-4-validation-engine`) and merged back to `main` only when the phase is complete and all checks (lint, typecheck, tests, build) pass. Keep `main` clean — no in-progress work on it.
+
 ---
 
 ## Phase 1 — Foundation (App setup + architecture + UI + routing)
