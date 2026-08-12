@@ -55,7 +55,7 @@ export const footerNav: { title: string; links: NavItem[] }[] = [
     title: "Community",
     links: [
       { title: "About", href: "/about" },
-      { title: "GitHub", href: "https://github.com/codiq/codiq", external: true },
+      { title: "GitHub", href: "https://github.com/Emmraan/Codiq", external: true },
       {
         title: "Contribute",
         href: "https://github.com/codiq/codiq/blob/main/CONTRIBUTING.md",
