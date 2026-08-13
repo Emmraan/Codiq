@@ -30,7 +30,7 @@ This guide covers the workflows, conventions, and standards we follow. Please al
 Requirements: **Node.js >= 20** and **pnpm >= 10**.
 
 ```bash
-git clone https://github.com/codiq/codiq.git
+git clone https://github.com/Emmraan/Codiq.git
 cd codiq
 pnpm install
 pnpm dev

@@ -1,8 +1,8 @@
 blank_issues_enabled: false
 contact_links:
   - name: Community discussions
-    url: https://github.com/codiq/codiq/discussions
+    url: https://github.com/Emmraan/Codiq/discussions
     about: Ask questions, share ideas, and discuss the roadmap.
   - name: Security policy
-    url: https://github.com/codiq/codiq/blob/main/SECURITY.md
+    url: https://github.com/Emmraan/Codiq/blob/main/SECURITY.md
     about: Report security vulnerabilities privately.

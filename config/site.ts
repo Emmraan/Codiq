@@ -21,7 +21,7 @@ export const siteConfig = {
   ],
   author: "CODIQ contributors",
   links: {
-    github: "https://github.com/codiq/codiq",
+    github: "https://github.com/Emmraan/Codiq",
     twitter: "https://twitter.com/codiq",
     discord: "https://discord.gg/codiq",
   },
