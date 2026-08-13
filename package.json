@@ -94,12 +94,7 @@
     "vitest": "^4.1.10"
   },
   "lint-staged": {
-    "*.{ts,tsx}": [
-      "eslint --fix",
-      "prettier --write"
-    ],
-    "*.{json,md,css,mjs,yml,yaml}": [
-      "prettier --write"
-    ]
+    "*.{ts,tsx}": "eslint --cache --cache-location node_modules/.cache/.eslintcache --fix",
+    "*.{json,md,css,mjs,yml,yaml}": "prettier --write"
   }
 }
